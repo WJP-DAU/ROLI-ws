@@ -287,7 +287,7 @@ def get_context_prompt(only_name, full_name, bio):
 def run_stage_2(start = 1):
     
     data = pd.read_csv("data/vietnam_danhbaluatsu/vietnam_danhbaluatsu.csv")
-    data = data.iloc[272:]
+    data = data.iloc[896:]
     target_values = dict(zip(data["full_name"], data["full_href"]))
 
     processed_data_list = []
@@ -331,6 +331,7 @@ def run(stage):
     if stage not in [1,2]:
         print("Invalid stage")
         return None
+
 
 if __name__ == "__main__":
     run(1)
