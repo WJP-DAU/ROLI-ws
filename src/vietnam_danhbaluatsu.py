@@ -167,13 +167,14 @@ def process_info(full_name, url):
     ]
 
     client = OpenAI(
-        base_url = "http://localhost:1234/v1",
+        base_url = "http://localhost:1910/v1",
         api_key  = "sk-1234"
     )
 
     chat_completion = client.chat.completions.create(
         messages = history,
         model    = "deepseek-r1-distill-qwen-32b"
+        # model    = "deepseek-r1-distill-qwen-7b"
     )
 
     answer = chat_completion.choices[0].message.content
@@ -335,4 +336,4 @@ def run(stage):
 
 if __name__ == "__main__":
     run(1)
-    run(2)
+    # run(2)
