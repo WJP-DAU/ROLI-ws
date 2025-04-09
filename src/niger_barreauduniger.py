@@ -11,7 +11,7 @@ def get_individual_data(id):
     r = requests.get(full_href)
     s =  BeautifulSoup(r.content, 'lxml')
 
-    full_name = s.find('h5', class_ = 'card_title').text.strip()
+    full_name = s.find('h5', class_ = 'card-title fw-bold text-center').text.strip()
     print(f'Retrieving information for {full_name}')
 
     country       = 'Niger'
@@ -28,21 +28,20 @@ def get_individual_data(id):
 
     contact_card = s.find('p', class_ = 'card-text')
     try:
-        phone = contact_card.find('i', class_ = 'fa fa-phone-square').find_next('font').text.strip()
+        phone = contact_card.find('i', class_ = 'fa fa-phone-square').next_sibling.strip()
         phone = re.search(
-            r'Telephone: (.*?)(?:$)', phone
+            r'Téléphone: (.*?)(?:$)', phone
         ).group(1).strip()
-        phone
     except AttributeError:
         phone = 'Not Found'
 
     try: 
-        email = contact_card.find('i', class_ = 'fa fa-envelope').find_next('font').text.strip()
+        email = contact_card.find('i', class_ = 'fa fa-envelope').next_sibling.strip()
     except AttributeError:
         email = 'Not Found'
     
     try:
-        address = s.find('h5', class_ = 'card_text').text.strip()
+        address = s.find('h5', class_ = 'card-text').find('small').text.strip()
     except AttributeError:
         address = 'Not Found'
 
@@ -67,15 +66,22 @@ def get_individual_data(id):
     }
 
     time.sleep(1)
-    
+
     return lawyer_entry
 
 
 def run_stage_1():
 
-    results = [get_individual_data(i) for i in range(1, 6)]
+    results = []
+    for i in range(1, 130):
+        try:
+            data = get_individual_data(i)
+            results.append(data)
+        except Exception as e:
+            print(f"Error processing ID {i}: {e}")
+            continue  # Skip to the next iteration if an error occurs
     
-    master_data = pd.concat(results)
+    master_data = pd.DataFrame(results)
     master_data.to_csv("data/niger_barreauduniger.csv", index = False, encoding = "utf-8")
 
 
